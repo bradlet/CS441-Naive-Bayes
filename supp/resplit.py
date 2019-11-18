@@ -31,20 +31,22 @@ def gen(filename, data):
         for c, fs in data:
             rows.writerow([c] + fs)
 
-# Do the resplits.
-for cl in ["orig", "itg"]:
-    train = parse("spect-" + cl + ".train.csv")
-    test = parse("spect-" + cl + ".test.csv")
-    data = train + test
-    random.shuffle(data)
-    pos, neg = split(data, lambda t: t[0])
-    tpos = 2 * len(pos) // 3
-    tneg = 2 * len(neg) // 3
-    train = pos[:tpos] + neg[:tneg]
-    test = pos[tpos:] + neg[tneg:]
-    if cl == "orig":
-        prefix = "spect-resplit"
-    else:
-        prefix = "spect-resplit-" + cl
-    gen(prefix + ".train.csv", train)
-    gen(prefix + ".test.csv", test)
+
+if __name__ == "__main__":
+    # Do the resplits.
+    for cl in ["orig", "itg"]:
+        train = parse("spect-" + cl + ".train.csv")
+        test = parse("spect-" + cl + ".test.csv")
+        data = train + test
+        random.shuffle(data)
+        pos, neg = split(data, lambda t: t[0])
+        tpos = 2 * len(pos) // 3
+        tneg = 2 * len(neg) // 3
+        train = pos[:tpos] + neg[:tneg]
+        test = pos[tpos:] + neg[tneg:]
+        if cl == "orig":
+            prefix = "spect-resplit"
+        else:
+            prefix = "spect-resplit-" + cl
+        gen(prefix + ".train.csv", train)
+        gen(prefix + ".test.csv", test)
